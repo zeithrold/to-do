@@ -53,7 +53,7 @@ export interface TODOConstructorOptions {
 export class TODO implements TODOData {
   id: string = '';
 
-  name: string = 'Unnamed';
+  name: string = '';
 
   createdAt: Date = new Date();
 
@@ -83,6 +83,19 @@ export class TODO implements TODOData {
     } else {
       this.id = uuidv4();
     }
+  }
+
+  toJSON(): string {
+    const rawData: TODOData = {
+      id: this.id,
+      name: this.name,
+      createdAt: this.createdAt,
+      modifiedAt: this.modifiedAt,
+      remindAt: this.remindAt,
+      tags: this.tags,
+      description: this.description,
+    };
+    return JSON.stringify(rawData);
   }
 
   static fromJSON(json: string): TODO {
