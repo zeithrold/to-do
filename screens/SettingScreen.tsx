@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {View, Text, Button} from 'react-native';
+import {secureStore} from '../libs';
 import {RootTabScreenProps} from '../types';
 
 export default function Setting(
@@ -13,6 +14,7 @@ export default function Setting(
           navigation.navigate('TODOEdit', {
             id: 'nice',
           });
+          secureStore.setIsFirstRun(true);
         }}
       />
     </View>

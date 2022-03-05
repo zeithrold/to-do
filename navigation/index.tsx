@@ -8,7 +8,7 @@ import {
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import * as React from 'react';
 import TODOEditScreen from '../screens/TODOEditScreen';
-import {ColorSchemeName} from 'react-native';
+import {Alert, ColorSchemeName} from 'react-native';
 import {
   RootStackParamList,
   RootTabParamList,
@@ -17,11 +17,22 @@ import {
 import TODOListScreen from '../screens/TODOListScreen';
 import SettingScreen from '../screens/SettingScreen';
 import LinkingConfiguration from './LinkingConfiguration';
+import {secureStore} from '../libs';
 
 
 export default function Navigation(
     {colorScheme}: {colorScheme: ColorSchemeName},
 ) {
+  React.useEffect(() => {
+    async function initialRun() {
+      const isFirstRun = await secureStore.getIsFirstRun();
+      if (isFirstRun) {
+        Alert.alert('It\'s the first run.', 'hello, world!');
+        await secureStore.setIsFirstRun(false);
+      }
+    }
+    initialRun();
+  }, []);
   return (
     <NavigationContainer
       linking={LinkingConfiguration}

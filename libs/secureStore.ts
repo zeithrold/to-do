@@ -29,15 +29,17 @@ export async function getTODOList() {
 
 export async function getIsFirstRun() {
   const isFirstRunRawData = await SecureStore.getItemAsync('isFirstRun');
-  if (!isFirstRunRawData) {
-    return false;
+  if ((!isFirstRunRawData) || isFirstRunRawData === 'true') {
+    return true;
+  } else {
+    false;
   }
-  return true;
 }
 
 export async function setIsFirstRun(isFirstRun: boolean) {
   if (isFirstRun) {
     await SecureStore.setItemAsync('isFirstRun', 'true');
+  } else {
+    await SecureStore.setItemAsync('isFirstRun', 'false');
   }
-  await SecureStore.setItemAsync('isFirstRun', 'false');
 }

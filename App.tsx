@@ -6,6 +6,9 @@ import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Navigation from './navigation';
+import useStoredTODOList from './hooks/useStoredTODOList';
+import {secureStore} from './libs';
+import {Alert} from 'react-native';
 
 // const styles = StyleSheet.create({
 //   container: {
@@ -18,9 +21,10 @@ import Navigation from './navigation';
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
+  const isStoredTODOLoaded = useStoredTODOList();
   const colorScheme = useColorScheme();
 
-  if (!isLoadingComplete) {
+  if (!(isLoadingComplete && isStoredTODOLoaded)) {
     return null;
   } else {
     return (

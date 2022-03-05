@@ -1,10 +1,12 @@
-import {observable, action} from 'mobx';
+import {observable, action, computed} from 'mobx';
 import {TODO, TODOData} from './TODO';
 
 class Store {
   @observable TODOList: TODO[] = [];
   @observable recentEditedTODO: string = '';
-  @action setTODOList(rawText: string) {
+  // MobX library requires all states SHOULD NOT contain
+  // any functions that may modify its original data.
+  @action setTODOListFromJSON(rawText: string) {
     const convertedTODOList:TODOData[] = JSON.parse(rawText);
     convertedTODOList.forEach((todo) => {
       this.TODOList.push(new TODO({
@@ -12,6 +14,22 @@ class Store {
         newToDo: false,
       }));
     });
+  }
+  @action setTODOList(rawData: TODOData[]) {
+    rawData.forEach((todo) => {
+      this.TODOList.push(new TODO({
+        data: todo,
+        newToDo: false,
+      }));
+    });
+  }
+  @computed notCompletedTODOList() {
+    const result = this.TODOList.filter((todo) => !todo.isCompleted);
+    return result;
+  }
+  @computed completedTODOList() {
+    const result = this.TODOList.filter((todo) => todo.isCompleted);
+    return result;
   }
   @action createTODO() {
     const tempTODO = new TODO();

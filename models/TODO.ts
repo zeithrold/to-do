@@ -4,34 +4,38 @@ import {v4 as uuidv4} from 'uuid';
  * This is the pure data that TODO model gets.
  */
 export interface TODOData {
-    /**
-     * The unique TODO's ID.
-     */
-    id: string;
-    /**
-     * The name of the TODO.
-     */
-    name: string;
-    /**
-     * The time that TODO is created.
-     */
-    createdAt: Date;
-    /**
-     * The time that TODO is modified last time.
-     */
-    modifiedAt: Date;
-    /**
-     * [FUTURE] The time that TODO is reminded.
-     */
-    remindAt?: Date;
-    /**
-     * Tagging.
-     */
-    tags: string[];
-    /**
-     * The description.
-     */
-    description: string;
+  /**
+   * The unique TODO's ID.
+   */
+  id: string;
+  /**
+   * The name of the TODO.
+   */
+  name: string;
+  /**
+   * The time that TODO is created.
+   */
+  createdAt: Date;
+  /**
+   * The time that TODO is modified last time.
+   */
+  modifiedAt: Date;
+  /**
+   * [FUTURE] The time that TODO is reminded.
+   */
+  remindAt?: Date;
+  /**
+   * Tagging.
+   */
+  tags: string[];
+  /**
+   * The description.
+   */
+  description: string;
+  /**
+   * Represents if the to-do is completed.
+   */
+  isCompleted: boolean;
 }
 
 export interface TODOConstructorOptions {
@@ -65,6 +69,8 @@ export class TODO implements TODOData {
 
   description: string = '';
 
+  isCompleted: boolean = false;
+
   constructor(options?: TODOConstructorOptions) {
     if (options) {
       if (options.data) { // If raw data in options.data exists
@@ -78,24 +84,12 @@ export class TODO implements TODOData {
         this.remindAt = options.data.remindAt;
         this.tags = options.data.tags;
         this.description = options.data.description;
+        this.isCompleted = options.data.isCompleted;
       }
       this.id = options.newToDo ? uuidv4() : this.id;
     } else {
       this.id = uuidv4();
     }
-  }
-
-  toJSON(): string {
-    const rawData: TODOData = {
-      id: this.id,
-      name: this.name,
-      createdAt: this.createdAt,
-      modifiedAt: this.modifiedAt,
-      remindAt: this.remindAt,
-      tags: this.tags,
-      description: this.description,
-    };
-    return JSON.stringify(rawData);
   }
 
   static fromJSON(json: string): TODO {
