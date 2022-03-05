@@ -5,10 +5,10 @@ import {StatusBar} from 'expo-status-bar';
 import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {Provider as MobXProvider} from 'mobx-react';
 import Navigation from './navigation';
 import useStoredTODOList from './hooks/useStoredTODOList';
-import {secureStore} from './libs';
-import {Alert} from 'react-native';
+import store from './models/Store';
 
 // const styles = StyleSheet.create({
 //   container: {
@@ -19,6 +19,10 @@ import {Alert} from 'react-native';
 //   },
 // });
 
+const stores = {
+  store,
+};
+
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const isStoredTODOLoaded = useStoredTODOList();
@@ -28,10 +32,12 @@ export default function App() {
     return null;
   } else {
     return (
-      <SafeAreaProvider>
-        <Navigation colorScheme={colorScheme} />
-        <StatusBar />
-      </SafeAreaProvider>
+      <MobXProvider {...stores}>
+        <SafeAreaProvider>
+          <Navigation colorScheme={colorScheme} />
+          <StatusBar />
+        </SafeAreaProvider>
+      </MobXProvider>
     );
   }
 }

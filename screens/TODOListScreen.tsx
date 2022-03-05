@@ -1,12 +1,41 @@
 import * as React from 'react';
-import {View, Text} from 'react-native';
+import {View, StyleSheet, ScrollView, Text} from 'react-native';
+import TODOView from '../components/TODOView';
+// import {TODO} from '../models/TODO';
 import {RootTabScreenProps} from '../types';
+import store from '../models/Store';
+import {observer} from 'mobx-react-lite';
 
-export default function TODOListScreen(
+
+const styles = StyleSheet.create({
+  todoList: {
+    margin: 10,
+  },
+  updateCount: {
+    fontSize: 1,
+    textAlign: 'center',
+  },
+});
+
+export default observer(function TODOListScreen(
     {navigation}: RootTabScreenProps<'TODOList'>) {
   return (
-    <View>
-      <Text>Hello, world! from TODOListScreen</Text>
-    </View>
+    <ScrollView>
+      <View style={styles.todoList}>
+        {
+          store.TODOList.map((todo) => {
+            // if (todo.isCompleted) {
+            //   return;
+            // }
+            return (
+              <TODOView key={todo.id} todo={todo} />
+            );
+          })
+        }
+      </View>
+      <Text style={styles.updateCount}>
+        {store.count}
+      </Text>
+    </ScrollView>
   );
-}
+});

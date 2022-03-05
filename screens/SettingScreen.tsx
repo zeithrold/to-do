@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {View, Text, Button} from 'react-native';
 import {secureStore} from '../libs';
+import store from '../models/Store';
 import {RootTabScreenProps} from '../types';
 
 export default function Setting(
@@ -17,6 +18,9 @@ export default function Setting(
           secureStore.setIsFirstRun(true);
         }}
       />
+      <Text>
+        {store.count}
+      </Text>
     </View>
   );
 }
