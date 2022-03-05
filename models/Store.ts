@@ -3,8 +3,6 @@ import {observable,
 import {TODO, TODOData} from './TODO';
 import colors from '../constants/colors';
 import Color from './Color';
-import 'react-native-get-random-values';
-import {v4 as uuidv4} from 'uuid';
 
 
 class Store {
@@ -15,6 +13,14 @@ class Store {
   TODOList: TODO[] = [];
   recentEditedTODO: string = '';
   colors = colors;
+  searchTag = '';
+  isEditTODO = false;
+  @action toggleEditTODO() {
+    this.isEditTODO = !this.isEditTODO;
+  }
+  @action setSearchTag(tag: string) {
+    this.searchTag = tag;
+  }
   @action setTODOListFromJSON(rawText: string) {
     const convertedTODOList:TODOData[] = JSON.parse(rawText);
     convertedTODOList.forEach((todo) => {
@@ -25,12 +31,21 @@ class Store {
     });
   }
   @action setTODOList(rawData: TODOData[]) {
+    this.TODOList = observable([]);
     rawData.forEach((todo) => {
       this.TODOList.push(observable(new TODO({
         data: todo,
         newToDo: false,
       })));
     });
+  }
+  @action setTODO(targetID: string, todo: TODOData) {
+    const index = this.TODOList.findIndex((_todo) => _todo.id === targetID);
+    if (index == -1) return;
+    this.TODOList[index] = observable(new TODO({
+      data: todo,
+      newToDo: false,
+    }));
   }
   @computed get notCompletedTODOList() {
     const result = this.TODOList.filter((todo) => !todo.isCompleted);
@@ -91,10 +106,8 @@ class Store {
     const targetIndex = this.TODOList.findIndex((todo) => {
       return todo.id === targetID;
     });
-    console.log(targetID, targetIndex, this.TODOList[targetIndex].isCompleted);
     this.TODOList[targetIndex].isCompleted =
       !this.TODOList[targetIndex].isCompleted;
-    console.log(targetID, targetIndex, this.TODOList[targetIndex].isCompleted);
     // this.update();
   }
   @action update() {
@@ -109,34 +122,7 @@ autorun(() => {
 
 const store = new Store();
 
-
-const testList: TODO[] = [
-  new TODO({data: {
-    name: 'Spasmodic', tags: ['IN 15', 'AT 16'], id: uuidv4(),
-    createdAt: new Date(),
-    modifiedAt: new Date(),
-    description: '',
-    isCompleted: true,
-  }, newToDo: false}),
-  new TODO({data: {
-    name: 'Reimei', tags: ['IN 15'], id: uuidv4(),
-    createdAt: new Date(),
-    modifiedAt: new Date(),
-    description: '',
-    isCompleted: false,
-  }, newToDo: false}),
-  new TODO({data: {
-    name: 'XING', tags: ['IN 13'], id: uuidv4(),
-    createdAt: new Date(),
-    modifiedAt: new Date(),
-    description: '',
-    isCompleted: false,
-  }, newToDo: false}),
-];
-
-store.setTODOList(testList);
 store.shuffleTagsColors();
-// store.generateTagsColors();
 
 export default store;
 

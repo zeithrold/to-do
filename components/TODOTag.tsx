@@ -1,7 +1,14 @@
 import * as React from 'react';
 // import store from '../models/Store';
-import {StyleSheet, ViewProps, View, Text} from 'react-native';
+import {
+  StyleSheet,
+  ViewProps,
+  // View,
+  Text,
+  Pressable,
+} from 'react-native';
 import Color from '../models/Color';
+import store from '../models/Store';
 
 const styles = StyleSheet.create({
   todoTag: {
@@ -21,10 +28,15 @@ interface TODOTagProps extends ViewProps {
 
 export default function TODOTag({children, color, tag}: TODOTagProps) {
   return (
-    <View style={[styles.todoTag, {
-      backgroundColor: color.background,
-    }]}>
+    <Pressable
+      onPress={() => {
+        store.setSearchTag(tag);
+      }}
+      style={[styles.todoTag, {
+        backgroundColor: color.background,
+      }]}
+    >
       <Text style={{color: color.font}}>{tag}</Text>
-    </View>
+    </Pressable>
   );
 }

@@ -5,7 +5,7 @@ import TODOCheckBox from './TODOCheckBox';
 import store from '../models/Store';
 import TODOTag from './TODOTag';
 import 'react-native-get-random-values';
-import {v4 as uuidv4} from 'uuid';
+// import {v4 as uuidv4} from 'uuid';
 
 const styles = StyleSheet.create({
   todoViewRoot: {
@@ -38,10 +38,6 @@ export default function TODOView({todo}: {todo: TODO}) {
       <Pressable
         onPress={() => {
           store.reverseCheckedTODO(todo.id);
-          // store.createTODOFromRawData({
-          //   id: uuidv4();
-          //   name
-          // });
           store.update();
         }}
       >
@@ -51,6 +47,7 @@ export default function TODOView({todo}: {todo: TODO}) {
       <View style={styles.todoView} >
         <Text style={[styles.todoViewTitle,
           {marginBottom: 2}]}>{todo.name}</Text>
+        {todo.tags.length > 0?
         <View style={[styles.todoViewTags, {marginTop: 2}]}>
           {
             todo.tags.map((tag) => {
@@ -62,7 +59,8 @@ export default function TODOView({todo}: {todo: TODO}) {
               );
             })
           }
-        </View>
+        </View> : null
+        }
       </View>
     </View>
   );

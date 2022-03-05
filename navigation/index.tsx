@@ -8,19 +8,20 @@ import {
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import * as React from 'react';
 import TODOEditScreen from '../screens/TODOEditScreen';
-import {Alert, ColorSchemeName, Pressable} from 'react-native';
+import {Alert, Button, ColorSchemeName, Pressable} from 'react-native';
 import {
   RootStackParamList,
   RootTabParamList,
   RootTabScreenProps,
 } from '../types';
+import {useNavigation} from '@react-navigation/native';
 import TODOListScreen from '../screens/TODOListScreen';
 import SettingScreen from '../screens/SettingScreen';
 import LinkingConfiguration from './LinkingConfiguration';
 import {secureStore} from '../libs';
 // import {observer} from 'mobx-react-lite';
 import 'react-native-get-random-values';
-import {v4 as uuidv4} from 'uuid';
+// import {v4 as uuidv4} from 'uuid';
 import store from '../models/Store';
 import themeColors from '../constants/themeColors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -51,6 +52,7 @@ export default function Navigation(
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
+  const navigation = useNavigation();
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -58,7 +60,33 @@ function RootNavigator() {
         component={BottomTabNavigator}
         options={{headerShown: false}}/>
       <Stack.Group screenOptions={{presentation: 'modal'}}>
-        <Stack.Screen name="TODOEdit" component={TODOEditScreen} />
+        <Stack.Screen
+          name="TODOEdit"
+          component={TODOEditScreen}
+          options={{
+            contentStyle: {
+              backgroundColor: 'white',
+            },
+            title: 'Edit To-Do',
+            headerLeft: () => (
+              <Button
+                title='Close'
+                onPress={() => {
+                  navigation.goBack();
+                }}
+              />
+            ),
+            headerRight: () => (
+              <Button
+                title='Save'
+                onPress={()=>{
+                  store.toggleEditTODO();
+                  navigation.goBack();
+                }}
+              />
+            ),
+          }}
+        />
       </Stack.Group>
     </Stack.Navigator>
   );
@@ -82,25 +110,9 @@ function BottomTabNavigator() {
           headerRight: () => (
             <Pressable
               onPress={() => {
-                // store.createTODO();
-                store.createTODOFromRawData({
-                  id: uuidv4(),
-                  name: 'DB Doll',
-                  createdAt: new Date(),
-                  modifiedAt: new Date(),
-                  tags: ['AT 12'],
-                  description: '',
-                  isCompleted: false,
-                });
-                store.createTODOFromRawData({
-                  id: uuidv4(),
-                  name: 'Rrhar\'il',
-                  createdAt: new Date(),
-                  modifiedAt: new Date(),
-                  tags: ['AT 16', 'IN 15'],
-                  description: '',
-                  isCompleted: false,
-                });
+                store.createTODO();
+                navigation.navigate('TODOEdit',
+                    {id: store.TODOList[store.TODOList.length - 1].id});
               }}>
               <Ionicons name='add' size={30}
                 color={themeColors[colorScheme].text}
