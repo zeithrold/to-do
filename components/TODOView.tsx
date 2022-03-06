@@ -5,6 +5,7 @@ import TODOCheckBox from './TODOCheckBox';
 import store from '../models/Store';
 import TODOTag from './TODOTag';
 import 'react-native-get-random-values';
+import {secureStore} from '../libs';
 // import {v4 as uuidv4} from 'uuid';
 
 const styles = StyleSheet.create({
@@ -39,6 +40,7 @@ export default function TODOView({todo}: {todo: TODO}) {
         onPress={() => {
           store.reverseCheckedTODO(todo.id);
           store.update();
+          secureStore.setTODOList(store.TODOList);
         }}
       >
         <TODOCheckBox

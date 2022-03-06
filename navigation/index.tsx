@@ -8,7 +8,7 @@ import {
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import * as React from 'react';
 import TODOEditScreen from '../screens/TODOEditScreen';
-import {Alert, Button, ColorSchemeName, Pressable} from 'react-native';
+import {Alert, ColorSchemeName, Pressable} from 'react-native';
 import {
   RootStackParamList,
   RootTabParamList,
@@ -25,6 +25,7 @@ import 'react-native-get-random-values';
 import store from '../models/Store';
 import themeColors from '../constants/themeColors';
 import useColorScheme from '../hooks/useColorScheme';
+import TODOHeaderButton from '../components/TODOHeaderButton';
 
 
 export default function Navigation(
@@ -69,7 +70,7 @@ function RootNavigator() {
             },
             title: 'Edit To-Do',
             headerLeft: () => (
-              <Button
+              <TODOHeaderButton
                 title='Close'
                 onPress={() => {
                   navigation.goBack();
@@ -77,7 +78,7 @@ function RootNavigator() {
               />
             ),
             headerRight: () => (
-              <Button
+              <TODOHeaderButton
                 title='Save'
                 onPress={()=>{
                   store.toggleEditTODO();

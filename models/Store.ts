@@ -1,5 +1,5 @@
 import {observable,
-  action, computed, autorun, makeAutoObservable} from 'mobx';
+  action, computed, makeAutoObservable} from 'mobx';
 import {TODO, TODOData} from './TODO';
 import colors from '../constants/colors';
 import Color from './Color';
@@ -114,11 +114,6 @@ class Store {
     this.count++;
   }
 }
-
-
-autorun(() => {
-  console.log('changed');
-});
 
 const store = new Store();
 

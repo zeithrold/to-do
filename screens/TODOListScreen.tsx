@@ -15,6 +15,7 @@ import store from '../models/Store';
 import {observer} from 'mobx-react-lite';
 import {reaction} from 'mobx';
 import {Ionicons} from '@expo/vector-icons';
+import * as Device from 'expo-device';
 
 
 const styles = StyleSheet.create({
@@ -191,7 +192,9 @@ export default observer(function TODOListScreen(
                 })
               }
             </View>
-            <Text style={styles.updateCount}>
+            <Text style={[styles.updateCount, {
+              fontSize: Device.brand? 1 : 0,
+            }]}>
               {store.count}
             </Text>
           </ScrollView>:

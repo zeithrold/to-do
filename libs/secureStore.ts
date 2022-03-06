@@ -1,20 +1,47 @@
+import * as Device from 'expo-device';
 import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TODO, TODOData} from '../models/TODO';
+
+
+async function setItem(key: string, value: string) {
+  try {
+    if (!Device.brand) {
+      return await AsyncStorage.setItem(key, value);
+    } else {
+      return await SecureStore.setItemAsync(key, value);
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
+async function getItem(key: string) {
+  try {
+    if (!Device.brand) {
+      return await AsyncStorage.getItem(key);
+    } else {
+      return await SecureStore.getItemAsync(key);
+    }
+  } catch (e) {
+    throw e;
+  }
+}
 
 export async function setTODOList(TODOList: TODO[]) {
   const JSONRawData = JSON.stringify(TODOList);
   try {
-    await SecureStore.setItemAsync('TODODataJSON', JSONRawData);
+    await setItem('TODODataJSON', JSONRawData);
   } catch (e) {
     throw e;
   }
 }
 
 export async function getTODOList() {
-  let JSONRawData = await SecureStore.getItemAsync('TODODataJSON');
+  let JSONRawData = await getItem('TODODataJSON');
   let parsedData: TODOData[] = [];
   if (!JSONRawData) {
-    SecureStore.setItemAsync('TODODataJSON', '[]');
+    await setItem('TODODataJSON', '[]');
     JSONRawData = '[]';
   }
   parsedData = JSON.parse(JSONRawData);
@@ -28,7 +55,7 @@ export async function getTODOList() {
 }
 
 export async function getIsFirstRun() {
-  const isFirstRunRawData = await SecureStore.getItemAsync('isFirstRun');
+  const isFirstRunRawData = await getItem('isFirstRun');
   if ((!isFirstRunRawData) || isFirstRunRawData === 'true') {
     return true;
   } else {
@@ -38,8 +65,8 @@ export async function getIsFirstRun() {
 
 export async function setIsFirstRun(isFirstRun: boolean) {
   if (isFirstRun) {
-    await SecureStore.setItemAsync('isFirstRun', 'true');
+    await setItem('isFirstRun', 'true');
   } else {
-    await SecureStore.setItemAsync('isFirstRun', 'false');
+    await setItem('isFirstRun', 'false');
   }
 }
